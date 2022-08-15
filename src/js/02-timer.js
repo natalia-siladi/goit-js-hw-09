@@ -56,18 +56,31 @@ function onStartButton() {
     timeInterval(timer);
 };
 function addLeadingZero(value) {
-    return String(value).padStart(2, '0');
+    if (value < 100) {
+        return String(value).padStart(2, '0');
+    }
+    return String(value).padStart(3, '0');
 
 };
 
 function convertMs(ms) {
-    const days = addLeadingZero(Math.floor((ms / (1000 * 60 * 60 * 24)) % 7));
-    const hours = addLeadingZero(Math.floor((ms / (1000 * 60 * 60)) % 24));
-    const minutes = addLeadingZero(Math.floor((ms / (1000 * 60)) % 60));
-    const seconds = addLeadingZero(Math.floor((ms / 1000) % 60));
+    // Number of milliseconds per unit of time
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    // Remaining days
+    const days = Math.floor(ms / day);
+    // Remaining hours
+    const hours = Math.floor((ms % day) / hour);
+    // Remaining minutes
+    const minutes = Math.floor(((ms % day) % hour) / minute);
+    // Remaining seconds
+    const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
     return { days, hours, minutes, seconds };
-};
+}
 
 function updateBodyTime({ days, hours, minutes, seconds }) {
     valueTime[0].textContent = days;
